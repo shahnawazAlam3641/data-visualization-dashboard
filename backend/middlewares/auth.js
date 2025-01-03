@@ -5,7 +5,17 @@ const auth = async (req, res, next) => {
   try {
     const { token } = req.cookies;
 
+    console.log(token);
+
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!decodedToken) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Token",
+        error,
+      });
+    }
 
     console.log(decodedToken);
 

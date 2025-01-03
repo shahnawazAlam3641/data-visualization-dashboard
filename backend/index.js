@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const auth = require("./middlewares/auth");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -14,6 +15,13 @@ const app = express();
 app.use(express.json());
 
 app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 
 const PORT = process.env.PORT || 4000;
 
@@ -24,7 +32,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/user/signup", async (req, res) => {
+app.post("/api/v1/user/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -72,7 +80,7 @@ app.post("/user/signup", async (req, res) => {
   }
 });
 
-app.post("/user/signin", async (req, res) => {
+app.post("/api/v1/user/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -115,6 +123,56 @@ app.post("/user/signin", async (req, res) => {
       success: true,
       message: "User Registered Successfully",
       data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while signing in",
+      error,
+    });
+  }
+});
+
+app.get("/api/v1/user/userDetails", async (req, res) => {
+  try {
+    const { token } = req.cookies;
+
+    const validUser = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!validUser) {
+      res.status(400).json({
+        success: false,
+        message: "Ivalid token",
+        error,
+      });
+    }
+
+    const user = await User.findOne({ email: validUser.email });
+
+    user.password = undefined;
+
+    return res.status(200).json({
+      success: false,
+      message: "User Found",
+      data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while fetching user details",
+      error,
+    });
+  }
+});
+
+app.post("/api/v1/user/logout", auth, (req, res) => {
+  try {
+    res.cookie("token", null);
+    return res.status(200).json({
+      succcess: false,
+      message: "Logout Successfull",
     });
   } catch (error) {
     console.log(error);
