@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useLocation, useParams } from "react-router";
 import useQuery from "../hooks/useQuery";
 import BarAndLineChart from "./BarAndLineChart";
 import { useDispatch, useSelector } from "react-redux";

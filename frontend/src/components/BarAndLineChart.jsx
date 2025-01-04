@@ -60,13 +60,10 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
   }, [filterOption]);
 
   useEffect(() => {
-    document.cookie = `filterPref=${JSON.stringify(filters)}`;
+    if (!isSharedDashboard) {
+      document.cookie = `filterPref=${JSON.stringify(filters)}`;
+    }
   }, [filters]);
-
-  useEffect(() => {
-    const filterPref = JSON.parse(useCookie("filterPref"));
-    console.log(filterPref);
-  }, []);
 
   const filteredData = data.filter((item) => {
     const ageMatch = filters.age === "All" || item.Age === filters.age;
@@ -124,7 +121,6 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
   };
 
   const handleBarClick = (elements) => {
-    // console.log(elements);
     if (elements.length > 0) {
       const index = elements[0].index;
       const feature = barChartData.labels[index];

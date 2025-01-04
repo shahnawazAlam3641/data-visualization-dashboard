@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import useCookie from "../hooks/useCookie";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { addUser, removeUser } from "../redux/userSlice";
