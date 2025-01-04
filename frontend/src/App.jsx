@@ -3,6 +3,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import SignIn from "./components/SignIn";
 import Dashboard from "./components/Dashboard";
+import SharedDashboard from "./components/SharedDashboard";
 
 function App() {
   return (
@@ -11,6 +12,10 @@ function App() {
       <Routes>
         <Route path="/login" element={<SignIn />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/shared-dashboard/:userId/filters"
+          element={<SharedDashboard />}
+        />
       </Routes>
     </main>
   );

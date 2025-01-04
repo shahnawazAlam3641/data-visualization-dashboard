@@ -14,8 +14,6 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
 
-  console.log(user);
-
   const cookie = useCookie("token");
 
   const handleLogout = async () => {
@@ -33,8 +31,6 @@ const Navbar = () => {
       const response = await axios.get(BASE_URL + "user/userDetails", {
         withCredentials: true,
       });
-
-      console.log(response.data.data);
 
       dispatch(addUser(response.data.data));
     } catch (error) {
