@@ -8,6 +8,8 @@ const auth = require("./middlewares/auth");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
+const dataSet = require("./utils/dataSet");
+
 dotenv.config();
 
 const app = express();
@@ -173,6 +175,23 @@ app.post("/api/v1/user/logout", auth, (req, res) => {
     return res.status(200).json({
       succcess: false,
       message: "Logout Successfull",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while signing in",
+      error,
+    });
+  }
+});
+
+app.get("/api/v1/data", auth, async (req, res) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      message: "Data sent successfully",
+      data: dataSet,
     });
   } catch (error) {
     console.log(error);
