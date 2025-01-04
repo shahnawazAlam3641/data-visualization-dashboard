@@ -1,5 +1,3 @@
-import React from "react";
-
 const useCookie = (name) => {
   const cookies = document.cookie.split(";");
 

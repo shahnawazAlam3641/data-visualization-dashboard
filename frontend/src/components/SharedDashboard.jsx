@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router";
+import { useEffect } from "react";
+import { useLocation, useParams } from "react-router";
 import useQuery from "../hooks/useQuery";
 import BarAndLineChart from "./BarAndLineChart";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,6 @@ const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 const SharedDashboard = () => {
   const dataSet = useSelector((store) => store.dataSet);
   const dispatch = useDispatch();
-  const { id } = useParams();
   const query = useQuery();
   const age = query.get("age");
   const gender = query.get("gender");
@@ -21,7 +20,7 @@ const SharedDashboard = () => {
   const filterOption = {
     age: age,
     gender: gender,
-    startdate: startdate || "", // Convert to Date object
+    startdate: startdate || "",
     enddate: enddate || "",
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import useCookie from "../hooks/useCookie";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -13,8 +13,6 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-
-  const cookie = useCookie("token");
 
   const handleLogout = async () => {
     try {
@@ -35,6 +33,7 @@ const Navbar = () => {
       dispatch(addUser(response.data.data));
     } catch (error) {
       console.error(error);
+
       navigate("/login");
     }
   };

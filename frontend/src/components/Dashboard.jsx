@@ -9,12 +9,14 @@ import { CategoryScale } from "chart.js";
 // import PieChart from "./PieChart";
 // import { BarChart } from "./BarChart";
 import BarAndLineChart from "./BarAndLineChart";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 Chart.register(CategoryScale);
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const user = useSelector((store) => store.user);
 
   const dispatch = useDispatch();
@@ -32,7 +34,9 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (!dataSet) {
+    if (!user) {
+      return navigate("/login");
+    } else if (!dataSet) {
       fetchData();
     }
   }, []);

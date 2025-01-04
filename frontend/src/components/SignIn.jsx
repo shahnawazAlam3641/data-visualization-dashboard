@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../redux/userSlice";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
@@ -14,6 +14,8 @@ const SignIn = () => {
   const passwordRef = useRef(null);
 
   const navigate = useNavigate();
+
+  const user = useSelector((store) => store.user);
 
   const dispatch = useDispatch();
 
@@ -56,6 +58,14 @@ const SignIn = () => {
       setErrorMessage(error?.response?.data?.message);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  }, [user]);
 
   return (
     <div className="flex justify-center items-center w-full h-[92vh]">

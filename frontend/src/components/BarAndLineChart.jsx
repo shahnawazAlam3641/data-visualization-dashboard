@@ -15,10 +15,9 @@ import {
 } from "chart.js";
 import zoomPlugin from "chartjs-plugin-zoom";
 import "chartjs-adapter-date-fns";
-import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import useCookie from "../hooks/useCookie";
 
-// Register the required Chart.js components and the Zoom plugin
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -36,23 +35,24 @@ Chart.register(
 const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
   const user = useSelector((store) => store.user);
   const [selectedFeature, setSelectedFeature] = useState(null);
-  const location = useLocation();
 
-  const [filters, setFilters] = useState({
-    age: "All",
-    gender: "All",
-    dateRange: ["", ""],
-    startDate: "",
-    endDate: "",
-  });
+  const filterInitialState = useCookie("filterPref")
+    ? JSON.parse(useCookie("filterPref"))
+    : {
+        age: "All",
+        gender: "All",
+        startDate: "",
+        endDate: "",
+      };
+
+  const [filters, setFilters] = useState(filterInitialState);
 
   useEffect(() => {
     if (filterOption) {
-      console.log(filterOption);
+      // console.log(filterOption);
       setFilters({
         age: filterOption?.age,
         gender: filterOption?.gender,
-        dateRange: [`${filterOption.startdate}`, `${filterOption.enddate}`],
         startDate: filterOption.startdate,
         endDate: filterOption.enddate,
       });
@@ -60,40 +60,38 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
   }, [filterOption]);
 
   useEffect(() => {
-    console.log(filters);
+    document.cookie = `filterPref=${JSON.stringify(filters)}`;
   }, [filters]);
 
-  // Filter and aggregate data for the bar chart
-  const filteredData = data.filter((item) => {
-    // console.log(data[0]);
+  useEffect(() => {
+    const filterPref = JSON.parse(useCookie("filterPref"));
+    console.log(filterPref);
+  }, []);
 
+  const filteredData = data.filter((item) => {
     const ageMatch = filters.age === "All" || item.Age === filters.age;
 
     const genderMatch =
       filters.gender === "All" || item.Gender === filters.gender;
 
-    // const [startDate, endDate] = filters.dateRange;
     const startDate = filters.startDate;
     const endDate = filters.endDate;
 
     const dateMatch =
       (!startDate || new Date(item.Day) >= new Date(startDate)) &&
       (!endDate || new Date(item.Day) <= new Date(endDate));
-    // console.log(ageMatch && genderMatch && dateMatch);
     return ageMatch && genderMatch && dateMatch;
   });
 
   const aggregatedData = filteredData.reduce((acc, item) => {
     const features = ["A", "B", "C", "D", "E", "F"];
     features.forEach((feature) => {
-      // console.log(item[feature]);
       acc[feature] = (acc[feature] || 0) + item[feature];
     });
 
     return acc;
   }, {});
-  console.log(aggregatedData);
-  // Prepare bar chart data
+
   const barChartData = {
     labels: Object.keys(aggregatedData),
     datasets: [
@@ -126,7 +124,7 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
   };
 
   const handleBarClick = (elements) => {
-    console.log(elements);
+    // console.log(elements);
     if (elements.length > 0) {
       const index = elements[0].index;
       const feature = barChartData.labels[index];
@@ -153,19 +151,16 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
     plugins: {
       zoom: {
         zoom: {
-          // drag: {
-          //   enabled: true, // Drag-to-zoom for touchpad users
-          // },
           wheel: {
             enabled: true,
           },
           pinch: {
-            enabled: true, // Pinch-to-zoom for touchscreens
+            enabled: true,
           },
-          mode: "x", // Zoom along the x-axis
+          mode: "x",
         },
         pan: {
-          enabled: true, // Allow panning
+          enabled: true,
           mode: "x",
         },
       },
@@ -184,7 +179,6 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
       startDate: startDate,
       endDate: endDate,
     }));
-    console.log(filters);
   };
 
   return (
