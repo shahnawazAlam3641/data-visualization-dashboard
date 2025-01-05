@@ -69,6 +69,7 @@ app.post("/api/v1/user/signup", async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "None",
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
     return res.status(200).json({
@@ -127,6 +128,7 @@ app.post("/api/v1/user/signin", async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "None",
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
     return res.status(200).json({
@@ -186,7 +188,7 @@ app.get("/api/v1/user/userDetails", auth, async (req, res) => {
 
 app.post("/api/v1/user/logout", auth, (req, res) => {
   try {
-    res.cookie("token", null);
+    res.cookie("token", null, { expires: new Date(Date.now()) });
     return res.status(200).json({
       succcess: false,
       message: "Logout Successfull",
