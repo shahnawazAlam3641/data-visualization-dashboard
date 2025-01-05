@@ -184,12 +184,12 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
     <div className="flex flex-col gap-5 w-full p-5">
       <div className="flex justify-between">
         <h2 className="text-lg font-semibold">Filters</h2>
-        <div className="flex gap-5">
+        <div className="flex flex-wrap gap-2 place-content-end md:gap-5">
           {" "}
           {!isSharedDashboard && (
             <button
               onClick={copyLink}
-              className="py-1 px-2 bg-accesntColor border-2 border-accesntColor hover:bg-white hover:text-textColor text-white font-semibold w-fit rounded-md transition-colors duration-200 "
+              className="py-1  px-2 bg-accesntColor border-2 border-accesntColor hover:bg-white hover:text-textColor text-white font-semibold w-fit rounded-md transition-colors duration-200 "
             >
               Share Dashboard
             </button>
