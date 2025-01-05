@@ -2,15 +2,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { addDataSet } from "../redux/dataSetSlice";
-import Chart from "chart.js/auto";
-
-import { CategoryScale } from "chart.js";
 import BarAndLineChart from "./BarAndLineChart";
 import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
-
-Chart.register(CategoryScale);
 
 const Dashboard = () => {
   const navigate = useNavigate();

@@ -65,7 +65,11 @@ app.post("/api/v1/user/signup", async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
+    });
 
     return res.status(200).json({
       success: true,
@@ -119,7 +123,11 @@ app.post("/api/v1/user/signin", async (req, res) => {
 
     user.password = undefined;
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
+    });
 
     return res.status(200).json({
       success: true,
@@ -136,9 +144,16 @@ app.post("/api/v1/user/signin", async (req, res) => {
   }
 });
 
-app.get("/api/v1/user/userDetails", async (req, res) => {
+app.get("/api/v1/user/userDetails", auth, async (req, res) => {
   try {
     const { token } = req.cookies;
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Token invalid",
+      });
+    }
 
     const validUser = jwt.verify(token, process.env.JWT_SECRET);
 
