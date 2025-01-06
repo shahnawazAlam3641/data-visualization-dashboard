@@ -4,12 +4,14 @@ import Navbar from "./components/Navbar";
 import SignIn from "./components/SignIn";
 import Dashboard from "./components/Dashboard";
 import SharedDashboard from "./components/SharedDashboard";
+import Error from "./components/Error";
 
 function App() {
   return (
     <main className="w-full h-full">
       <Navbar />
       <Routes>
+        <Route path="*" element={<Error />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route
