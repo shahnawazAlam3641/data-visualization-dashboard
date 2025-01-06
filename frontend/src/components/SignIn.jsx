@@ -15,7 +15,7 @@ const SignIn = () => {
 
   const navigate = useNavigate();
 
-  const user = useSelector((store) => store.user);
+  const user = useSelector((store) => store.user.user);
 
   const dispatch = useDispatch();
 
@@ -37,7 +37,6 @@ const SignIn = () => {
           setErrorMessage("");
           navigate("/dashboard");
         }
-        console.log(response);
       } else {
         const response = await axios.post(
           BASE_URL + "user/signin",

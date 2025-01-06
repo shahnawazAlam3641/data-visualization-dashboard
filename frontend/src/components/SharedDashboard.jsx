@@ -4,10 +4,12 @@ import BarAndLineChart from "./BarAndLineChart";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { addDataSet } from "../redux/dataSetSlice";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const SharedDashboard = () => {
+  const navigate = useNavigate();
   const dataSet = useSelector((store) => store.dataSet);
   const dispatch = useDispatch();
   const query = useQuery();
@@ -26,11 +28,19 @@ const SharedDashboard = () => {
   console.log(age, gender, startdate, enddate);
 
   const fetchData = async () => {
-    const response = await axios.get(BASE_URL + "data", {
-      withCredentials: true,
-    });
+    try {
+      const response = await axios.get(BASE_URL + "data", {
+        withCredentials: true,
+      });
 
-    dispatch(addDataSet(response.data.data));
+      dispatch(addDataSet(response.data.data));
+    } catch (error) {
+      console.log(error);
+      if (error?.response?.data?.message == "Token Invalid") {
+        navigate(`/login`);
+        // axios.post(BASE_URL + "/logout");
+      }
+    }
   };
 
   useEffect(() => {

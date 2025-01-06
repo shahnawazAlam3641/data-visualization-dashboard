@@ -17,7 +17,6 @@ import zoomPlugin from "chartjs-plugin-zoom";
 import "chartjs-adapter-date-fns";
 import { useSelector } from "react-redux";
 import useCookie from "../hooks/useCookie";
-import { useLocation } from "react-router-dom";
 
 Chart.register(
   CategoryScale,
@@ -34,10 +33,8 @@ Chart.register(
 );
 
 const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
-  const user = useSelector((store) => store.user);
+  const user = useSelector((store) => store?.user?.user);
   const [selectedFeature, setSelectedFeature] = useState(null);
-  const location = useLocation();
-  console.log(location);
 
   const filterInitialState = useCookie("filterPref")
     ? JSON.parse(useCookie("filterPref"))
@@ -52,7 +49,6 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
 
   useEffect(() => {
     if (filterOption) {
-      // console.log(filterOption);
       setFilters({
         age: filterOption?.age,
         gender: filterOption?.gender,
@@ -254,6 +250,20 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
               display: true,
             },
           },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Total Time Spent (in hours)", // Title for the X-axis
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Features", // Title for the Y-axis
+              },
+            },
+          },
         }}
       />
 
@@ -267,6 +277,20 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
               plugins: {
                 legend: {
                   display: true,
+                },
+              },
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: "Dates", // Title for the X-axis
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: `Time Trend for ${selectedFeature}`, // Dynamic title for the Y-axis
+                  },
                 },
               },
               ...zoomOptions,
