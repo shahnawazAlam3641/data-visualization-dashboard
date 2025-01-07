@@ -16,6 +16,8 @@ const Dashboard = () => {
 
   const dataSet = useSelector((store) => store.dataSet);
 
+  const user = useSelector((store) => store.user.user);
+
   const fetchData = async () => {
     try {
       const response = await axios.get(BASE_URL + "data", {
@@ -32,8 +34,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (!token) {
-      return navigate("/login");
+    if (!user) {
+      navigate("/login");
     } else if (!dataSet) {
       fetchData();
     }
