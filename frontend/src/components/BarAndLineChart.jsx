@@ -184,10 +184,11 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
           {" "}
           {!isSharedDashboard && (
             <button
+              title="Copy Link"
               onClick={copyLink}
               className="py-1  px-2 bg-accesntColor border-2 border-accesntColor hover:bg-white hover:text-textColor text-white font-semibold w-fit rounded-md transition-colors duration-200 "
             >
-              Share Dashboard
+              Copy Dashboard Link
             </button>
           )}
           <button

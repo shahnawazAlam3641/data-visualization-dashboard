@@ -31,18 +31,22 @@ const Navbar = () => {
         withCredentials: true,
       });
 
+      console.log("got user dispatch addUser");
+
       dispatch(addUser(response.data.data));
     } catch (error) {
       console.error(error);
-
+      console.log("error occured while fetch user navigating to login");
       navigate("/login");
     }
   };
 
   useEffect(() => {
     if (!token) {
+      console.log("token not found navigating to login");
       navigate("/login");
     } else {
+      console.log("token  found fetch user and dispatch addToken");
       dispatch(addToken(token));
       fetchUser();
     }

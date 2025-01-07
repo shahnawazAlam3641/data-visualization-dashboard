@@ -24,10 +24,14 @@ const Dashboard = () => {
         withCredentials: true,
       });
 
+      console.log("got data dispatch Add Data");
+
       dispatch(addDataSet(response.data.data));
     } catch (error) {
       console.log(error);
+      console.log("got error");
       if (error?.response?.data?.message == "Invalid Token") {
+        console.log("invalid token error navigate login");
         navigate("/login");
       }
     }
@@ -35,8 +39,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!user) {
+      console.log("useEff user not found navigating to login");
       navigate("/login");
     } else if (!dataSet) {
+      console.log("user  found fetching data");
       fetchData();
     }
   }, []);
