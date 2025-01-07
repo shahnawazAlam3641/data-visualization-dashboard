@@ -86,7 +86,6 @@ app.post("/api/v1/user/signup", async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "None",
-      domain: process.env.FRONTEND_URL,
       maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
@@ -161,7 +160,6 @@ app.post("/api/v1/user/signin", async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "None",
-      domain: process.env.FRONTEND_URL,
       maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
@@ -226,7 +224,6 @@ app.post("/api/v1/user/logout", auth, (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "None",
-      domain: process.env.FRONTEND_URL,
       maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
     return res.status(200).json({
