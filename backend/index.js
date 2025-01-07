@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const auth = require("./middlewares/auth");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const { z } = require("zod");
 
 const dataSet = require("./utils/dataSet");
 
@@ -36,6 +37,22 @@ app.get("/", (req, res) => {
 
 app.post("/api/v1/user/signup", async (req, res) => {
   try {
+    const requestBodySchema = z.object({
+      email: z.string().email().min(5).max(150),
+      password: z.string().min(8).max(100),
+      name: z.string().min(3).max(50),
+    });
+
+    const isparsedDataSuccess = requestBodySchema.safeParse(req.body);
+
+    if (!isparsedDataSuccess.success) {
+      return res.status(401).json({
+        success: false,
+        message: isparsedDataSuccess.error.issues[0].message,
+        error: isparsedDataSuccess.error,
+      });
+    }
+
     const { name, email, password } = req.body;
 
     if ((!name, !email, !password)) {
@@ -89,6 +106,21 @@ app.post("/api/v1/user/signup", async (req, res) => {
 
 app.post("/api/v1/user/signin", async (req, res) => {
   try {
+    const requestBodySchema = z.object({
+      email: z.string().email().min(5).max(150),
+      password: z.string().min(8).max(100),
+    });
+
+    const isparsedDataSuccess = requestBodySchema.safeParse(req.body);
+
+    if (!isparsedDataSuccess.success) {
+      return res.status(401).json({
+        success: false,
+        message: isparsedDataSuccess.error.issues[0].message,
+        error: isparsedDataSuccess.error,
+      });
+    }
+
     const { email, password } = req.body;
 
     if ((!email, !password)) {
