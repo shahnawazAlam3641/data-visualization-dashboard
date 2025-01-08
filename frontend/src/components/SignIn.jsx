@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../redux/userSlice";
 import ShowPassword from "./ShowPassword";
+import { setLoading } from "../redux/loadingSlice";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -25,6 +26,7 @@ const SignIn = () => {
     try {
       console.log(e);
       e.target.disabled = true;
+      dispatch(setLoading(true));
       if (isSignInPage) {
         const response = await axios.post(
           BASE_URL + "user/signup",
@@ -41,6 +43,7 @@ const SignIn = () => {
           setErrorMessage("");
           navigate("/dashboard");
           e.target.disabled = false;
+          dispatch(setLoading(false));
         }
       } else {
         const response = await axios.post(
@@ -56,10 +59,12 @@ const SignIn = () => {
           setErrorMessage("");
           navigate("/dashboard");
           e.target.disabled = false;
+          dispatch(setLoading(false));
         }
       }
     } catch (error) {
       e.target.disabled = false;
+      dispatch(setLoading(false));
       console.error(error);
       setErrorMessage(error?.response?.data?.message);
     }

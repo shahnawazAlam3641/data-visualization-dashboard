@@ -5,11 +5,16 @@ import SignIn from "./components/SignIn";
 import Dashboard from "./components/Dashboard";
 import SharedDashboard from "./components/SharedDashboard";
 import Error from "./components/Error";
+import Loading from "./components/Loading";
+import { useSelector } from "react-redux";
 
 function App() {
+  const loading = useSelector((store) => store.loading);
+
   return (
-    <main className="w-full h-full">
+    <main className="w-full h-full relative">
       <Navbar />
+      {loading && <Loading />}
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Error />} />
