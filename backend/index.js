@@ -84,8 +84,8 @@ app.post("/api/v1/user/signup", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
@@ -123,7 +123,7 @@ app.post("/api/v1/user/signin", async (req, res) => {
 
     const { email, password } = req.body;
 
-    if ((!email, !password)) {
+    if (!email || !password) {
       return res.status(400).json({
         success: false,
         message: "All fields are mandetory",
@@ -139,11 +139,11 @@ app.post("/api/v1/user/signin", async (req, res) => {
       });
     }
 
-    const isPasswordCorrect = bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
     console.log(isPasswordCorrect);
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({
+      return res.status(400).json({
         success: false,
         message: "Invalid Credentials",
       });
@@ -158,8 +158,8 @@ app.post("/api/v1/user/signin", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
@@ -194,7 +194,7 @@ app.get("/api/v1/user/userDetails", auth, async (req, res) => {
     if (!validUser) {
       res.status(400).json({
         success: false,
-        message: "Ivalid token",
+        message: "Invalid Token",
         error,
       });
     }
@@ -222,8 +222,8 @@ app.post("/api/v1/user/logout", auth, (req, res) => {
   try {
     res.cookie("token", null, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
     return res.status(200).json({
