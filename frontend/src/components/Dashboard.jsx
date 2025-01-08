@@ -4,19 +4,19 @@ import axios from "axios";
 import { addDataSet } from "../redux/dataSetSlice";
 import BarAndLineChart from "./BarAndLineChart";
 import { useNavigate } from "react-router-dom";
-import useCookie from "../hooks/useCookie";
+// import useCookie from "../hooks/useCookie";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const token = useCookie("token");
+  // const token = useCookie("token");
 
   const dispatch = useDispatch();
 
   const dataSet = useSelector((store) => store.dataSet);
 
-  const user = useSelector((store) => store.user.user);
+  // const user = useSelector((store) => store.user.user);
 
   const fetchData = async () => {
     try {
@@ -37,15 +37,17 @@ const Dashboard = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("/login");
+  //   }
+  // }, [user]);
+
   useEffect(() => {
-    if (!user) {
-      console.log("useEff user not found navigating to login");
-      navigate("/login");
-    } else if (!dataSet) {
-      console.log("user  found fetching data");
+    if (!dataSet) {
       fetchData();
     }
-  }, []);
+  }, [dataSet]);
 
   if (!dataSet)
     return (

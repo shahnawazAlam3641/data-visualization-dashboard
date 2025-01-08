@@ -1,6 +1,5 @@
 const useCookie = (name) => {
   const cookies = document.cookie.split(";");
-
   const cookie = cookies.filter((item) => {
     const cookieName = item.split("=")[0];
 

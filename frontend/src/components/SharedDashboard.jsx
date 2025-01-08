@@ -47,7 +47,7 @@ const SharedDashboard = () => {
     if (!dataSet) {
       fetchData();
     }
-  }, []);
+  }, [dataSet]);
 
   return (
     dataSet && (

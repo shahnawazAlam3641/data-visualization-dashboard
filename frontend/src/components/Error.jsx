@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 const Error = () => {
   const navigate = useNavigate();
   return (
-    <div className="min-h-[90vh] w-full flex justify-center items-center">
+    <div className="min-h-[90vh] w-full flex flex-col gap-10 justify-center items-center">
       <h1 className="text-xl font-bold text-textColor">404 Page Not Found</h1>
       <button
         onClick={() => {

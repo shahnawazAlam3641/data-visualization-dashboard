@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import SignIn from "./components/SignIn";
@@ -11,6 +11,7 @@ function App() {
     <main className="w-full h-full">
       <Navbar />
       <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Error />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/dashboard" element={<Dashboard />} />

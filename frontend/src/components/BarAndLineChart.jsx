@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import useCookie from "../hooks/useCookie";
 import { Bar, Line } from "react-chartjs-2";
 import {
   Chart,
@@ -16,7 +17,7 @@ import {
 import zoomPlugin from "chartjs-plugin-zoom";
 import "chartjs-adapter-date-fns";
 import { useSelector } from "react-redux";
-import useCookie from "../hooks/useCookie";
+// import useCookie from "../hooks/useCookie";
 
 Chart.register(
   CategoryScale,
@@ -36,6 +37,8 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
   const user = useSelector((store) => store?.user?.user);
   const [selectedFeature, setSelectedFeature] = useState(null);
 
+  const [copyClicked, setCopyClicked] = useState(false);
+
   const filterInitialState = useCookie("filterPref")
     ? JSON.parse(useCookie("filterPref"))
     : {
@@ -46,6 +49,8 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
       };
 
   const [filters, setFilters] = useState(filterInitialState);
+  console.log(filters);
+  console.log(useCookie("filterPref"));
 
   useEffect(() => {
     if (filterOption) {
@@ -60,7 +65,11 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
 
   useEffect(() => {
     if (!isSharedDashboard) {
-      document.cookie = `filterPref=${JSON.stringify(filters)}`;
+      document.cookie = `filterPref=${JSON.stringify(
+        filters
+      )}; expires=${new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000
+      ).toUTCString()}; path=/`;
     }
   }, [filters]);
 
@@ -102,6 +111,10 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
   };
 
   const copyLink = () => {
+    setCopyClicked(true);
+    setTimeout(() => {
+      setCopyClicked(false);
+    }, 1500);
     const link =
       window.location.origin +
       `/shared-dashboard/${user._id}/filters?age=${filters.age}&gender=${filters.gender}&startdate=${filters.startDate}&enddate=${filters.endDate}`;
@@ -113,7 +126,6 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
     setFilters({
       age: "All",
       gender: "All",
-      dateRange: ["", ""],
       startDate: "",
       endDate: "",
     });
@@ -180,16 +192,29 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
     <div className="flex flex-col gap-5 w-full p-5">
       <div className="flex justify-between">
         <h2 className="text-lg font-semibold">Filters</h2>
-        <div className="flex flex-wrap gap-2 place-content-end md:gap-5">
-          {" "}
+        <div className=" flex flex-wrap gap-2 place-content-end md:gap-5">
           {!isSharedDashboard && (
-            <button
-              title="Copy Link"
-              onClick={copyLink}
-              className="py-1  px-2 bg-accesntColor border-2 border-accesntColor hover:bg-white hover:text-textColor text-white font-semibold w-fit rounded-md transition-colors duration-200 "
-            >
-              Copy Dashboard Link
-            </button>
+            <div className="relative">
+              <span
+                className={`transition-all duration-200 absolute  overflow-hidden rounded-full z-10 bg-accesntColor text-xs left-1/3 bottom-[120%] text-white font-medium ${
+                  copyClicked ? "h-fit p-1" : "h-0"
+                }`}
+              >
+                Link Copied
+              </span>
+              <div
+                className={`transition-all duration-50 rounded-sm   absolute  rotate-45 bg-accesntColor left-1/2 bottom-[100%] text-white font-medium ${
+                  copyClicked ? "p-2" : "p-0"
+                }`}
+              ></div>
+              <button
+                title="Copy Link"
+                onClick={copyLink}
+                className="py-1  px-2 bg-accesntColor border-2 border-accesntColor hover:bg-white hover:text-textColor text-white font-semibold w-fit rounded-md transition-colors duration-200 "
+              >
+                Copy Dashboard Link
+              </button>
+            </div>
           )}
           <button
             onClick={clearFilters}
@@ -220,7 +245,7 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
             <option value="Female">Female</option>
           </select>
         </label>
-        <label className="flex gap-3 flex-wrap">
+        <label className="flex gap-3 flex-nowrap">
           Start Data:
           <input
             type="date"
@@ -229,6 +254,8 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
             }
             value={filters.startDate}
           />
+        </label>
+        <label className="flex gap-3 flex-nowrap">
           End Date:
           <input
             type="date"
@@ -270,7 +297,6 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
 
       {selectedFeature && (
         <div>
-          <h2>Line Chart</h2>
           <Line
             data={lineChartData}
             options={{
