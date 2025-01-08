@@ -25,8 +25,6 @@ const SharedDashboard = () => {
     enddate: enddate || "",
   };
 
-  console.log(age, gender, startdate, enddate);
-
   const fetchData = async () => {
     try {
       const response = await axios.get(BASE_URL + "data", {

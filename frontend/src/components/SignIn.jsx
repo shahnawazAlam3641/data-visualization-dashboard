@@ -24,7 +24,6 @@ const SignIn = () => {
 
   const handleFormSubmit = async (e) => {
     try {
-      console.log(e);
       e.target.disabled = true;
       dispatch(setLoading(true));
       if (isSignInPage) {

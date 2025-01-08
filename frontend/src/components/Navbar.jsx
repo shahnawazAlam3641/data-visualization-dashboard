@@ -33,12 +33,9 @@ const Navbar = () => {
         withCredentials: true,
       });
 
-      console.log("got user dispatch addUser");
-
       dispatch(addUser(response.data.data));
     } catch (error) {
       console.error(error);
-      console.log("error occured while fetch user navigating to login");
       navigate("/login");
     }
   };

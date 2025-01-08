@@ -49,8 +49,6 @@ const BarAndLineChart = ({ data, filterOption, isSharedDashboard }) => {
       };
 
   const [filters, setFilters] = useState(filterInitialState);
-  console.log(filters);
-  console.log(useCookie("filterPref"));
 
   useEffect(() => {
     if (filterOption) {
