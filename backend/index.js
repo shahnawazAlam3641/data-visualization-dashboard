@@ -114,7 +114,7 @@ app.post("/api/v1/user/signin", async (req, res) => {
     const isparsedDataSuccess = requestBodySchema.safeParse(req.body);
 
     if (!isparsedDataSuccess.success) {
-      return res.status(401).json({
+      return res.status(400).json({
         success: false,
         message: isparsedDataSuccess.error.issues[0].message,
         error: isparsedDataSuccess.error,
@@ -140,7 +140,6 @@ app.post("/api/v1/user/signin", async (req, res) => {
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    console.log(isPasswordCorrect);
 
     if (!isPasswordCorrect) {
       return res.status(400).json({
@@ -165,7 +164,7 @@ app.post("/api/v1/user/signin", async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "User Registered Successfully",
+      message: "User Signed In Successfully",
       data: user,
     });
   } catch (error) {
